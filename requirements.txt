@@ -5,3 +5,4 @@ mysqlclient>=2.1.1
 pandas>=2.0.1
 yagmail>=0.14.259
 Werkzeug>=2.3.7
+gunicorn
