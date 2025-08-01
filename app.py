@@ -248,5 +248,9 @@ def index():
 
     return render_template("index.html", sent=False, uploaded_resume=uploaded_resume, total=0, current_year=current_year)
 
+
 if __name__ == '__main__':
-    app.run(port=5050, debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Render uses 10000 by default
+    app.run(host='0.0.0.0', port=port)
+
+
