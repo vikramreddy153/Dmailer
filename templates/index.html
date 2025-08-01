@@ -29,10 +29,12 @@
   </div>
   <div>
     <a class="btn btn-secondary btn-sm me-2" href="{{ url_for('home') }}">🏠 Home</a>
-    <button class="btn btn-outline-light btn-sm btn-toggle-theme" onclick="toggleTheme()">🌓 Light/Dark</button>
+    <button class="btn btn-outline-light btn-sm" onclick="toggleTheme()">🌓 Light/Dark</button>
   </div>
 </div>
 
+
+  <!-- HOW TO USE & Sample CSV -->
   <div class="alert alert-info">
     <b>How to use:</b>
     <ul class="mb-1">
@@ -47,6 +49,7 @@ Bob Smith,bob@example.com,Microsoft
 Charlie Doe,charlie@example.com,Amazon</pre>
   </div>
 
+  <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
@@ -57,7 +60,7 @@ Charlie Doe,charlie@example.com,Amazon</pre>
 
   <form method="POST" enctype="multipart/form-data" class="form-box p-4 rounded shadow">
 
-    <!-- Your Info -->
+    <!-- Section 1: Your Info -->
     <h5 class="mb-3"><b>1. Your Information</b></h5>
     <div class="row mb-3">
       <div class="col"><input name="your_name" class="form-control" placeholder="Your Full Name" required/></div>
@@ -69,11 +72,12 @@ Charlie Doe,charlie@example.com,Amazon</pre>
       <div class="col"><input name="your_github" class="form-control" placeholder="GitHub URL" required/></div>
     </div>
 
-    <!-- App Password -->
+    <!-- App password with show/hide -->
     <div class="input-group mb-2">
       <input type="password" name="app_password" id="appPass" class="form-control" placeholder="Gmail App Password" required>
       <span class="input-group-text" onclick="toggleAppPass()" style="cursor:pointer;" title="Show/Hide Password">👁️</span>
     </div>
+    <!-- PDF guide link below App Password -->
     <div class="mb-4">
       <small>
         Need help creating a Gmail App Password?
@@ -83,7 +87,7 @@ Charlie Doe,charlie@example.com,Amazon</pre>
       </small>
     </div>
 
-    <!-- Uploads -->
+    <!-- Section 2: Uploads -->
     <h5 class="mb-3"><b>2. Upload Files</b></h5>
     <div class="mb-2">
       <label>Contacts CSV</label>
@@ -99,7 +103,7 @@ Charlie Doe,charlie@example.com,Amazon</pre>
       <iframe src="{{ url_for('uploaded_file', filename=uploaded_resume) }}" width="100%" height="300" class="mb-3 border"></iframe>
     {% endif %}
 
-    <!-- Email Content -->
+    <!-- Section 3: Content -->
 
     <h5 class="mb-3"><b>3. Email Content</b></h5>
     <div class="mb-3">
@@ -113,24 +117,25 @@ Charlie Doe,charlie@example.com,Amazon</pre>
       </div>
     </div>
 
+       <!-- Placeholder explanation note below email body -->
     <div class="alert alert-secondary">
-      <b>Note:</b> Use these placeholders in Subject and Body:<br>
+      <b>Note:</b> Use these placeholders in Subject and Body to personalize your emails:<br>
       <ul>
         <li><code>{name}</code> - Recipient's full name</li>
-        <li><code>{email}</code> - Recipient's email</li>
-        <li><code>{company}</code> - Recipient's company</li>
+        <li><code>{email}</code> - Recipient's email address</li>
+        <li><code>{company}</code> - Recipient's company name</li>
         <li><code>{your_name}</code> - Your name</li>
-        <li><code>{your_email}</code> - Your email</li>
-        <li><code>{your_mobile}</code> - Your mobile</li>
-        <li><code>{your_linkedin}</code> - Your LinkedIn</li>
-        <li><code>{your_github}</code> - Your GitHub</li>
+        <li><code>{your_email}</code> - Your email address</li>
+        <li><code>{your_mobile}</code> - Your mobile number</li>
+        <li><code>{your_linkedin}</code> - Your LinkedIn URL</li>
+        <li><code>{your_github}</code> - Your GitHub URL</li>
       </ul>
     </div>
 
     <label>Subject Line:</label>
     <input name="subject_template" class="form-control mb-3" value="Referral Request for Internship at {company}" required/>
 
-    <label>Email Body (Plain Text):</label>
+    <label>Email Body (Plain Text with Placeholders):</label>
     <textarea name="email_template" class="form-control mb-4" rows="10" required>Dear {name},
 
 I hope this message finds you well. I am reaching out to express my keen interest in exploring internship opportunities at {company} and was wondering if you might be open to referring me.
@@ -149,7 +154,9 @@ LinkedIn: {your_linkedin}
 GitHub: {your_github}
     </textarea>
 
-    <!-- Send Settings -->
+
+
+    <!-- Section 4: Send Settings -->
     <h5 class="mb-3"><b>4. Sending Options</b></h5>
     <div class="row mb-3">
       <div class="col">
@@ -162,7 +169,7 @@ GitHub: {your_github}
       </div>
     </div>
 
-    <!-- Buttons -->
+    <!-- Preview and Send buttons -->
     <div class="mb-3 d-flex gap-2">
       <button class="btn btn-primary w-100" id="sendBtn">🚀 Send Emails</button>
       <button type="submit" formtarget="_blank" formaction="{{ url_for('preview') }}" formmethod="post" class="btn btn-outline-secondary">
@@ -171,9 +178,10 @@ GitHub: {your_github}
     </div>
   </form>
 
-  <!-- Logs -->
+  <!-- Live logs & Results -->
   <div id="log-output"></div>
 </div>
+<!-- Footer -->
 
 <footer class="mt-5 py-3 border-top text-center text-muted small">
   <div class="container">
@@ -187,6 +195,9 @@ GitHub: {your_github}
   </div>
 </footer>
 
+
+
+<!-- Scripts -->
 <script>
 function toggleTheme() {
   const html = document.documentElement;
@@ -194,12 +205,13 @@ function toggleTheme() {
   html.setAttribute("data-bs-theme", theme);
   localStorage.setItem("theme", theme);
 
+  // Swap logo depending on theme:
   const logo = document.getElementById("logo-img");
   if (logo) {
     if (theme === "dark") {
-      logo.src = "{{ url_for('static', filename='logo-dark.png') }}";
+      logo.src = "{{ url_for('static', filename='logo-dark.png') }}";  // white version
     } else {
-      logo.src = "{{ url_for('static', filename='logo-light.png') }}";
+      logo.src = "{{ url_for('static', filename='logo-light.png') }}";  // black version
     }
   }
 }
@@ -209,22 +221,69 @@ function toggleAppPass() {
   input.type = input.type === 'password' ? 'text' : 'password';
 }
 
+// Prevent double submit
 document.querySelector('form').onsubmit = function() {
   document.getElementById('sendBtn').disabled = true;
 };
 
-// Template management omitted for brevity
+// Email template local management using localStorage
+let templates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
+
+function saveTemplate() {
+  const name = prompt("Save template as:");
+  if (!name) return;
+  const subj = document.querySelector('input[name="subject_template"]').value;
+  const body = document.querySelector('textarea[name="email_template"]').value;
+  templates = templates.filter(t => t.name !== name);
+  templates.push({ name, subj, body });
+  localStorage.setItem("emailTemplates", JSON.stringify(templates));
+  updateTemplateList();
+  alert("Template saved.");
+}
+
+function loadTemplate() {
+  const name = document.getElementById("templateSelect").value;
+  const found = templates.find(t => t.name === name);
+  if (found) {
+    document.querySelector('input[name="subject_template"]').value = found.subj;
+    document.querySelector('textarea[name="email_template"]').value = found.body;
+  }
+}
+
+function deleteTemplate() {
+  const name = document.getElementById("templateSelect").value;
+  if (!name) {
+    alert("Select a template to delete.");
+    return;
+  }
+  if (confirm(`Delete template "${name}"?`)) {
+    templates = templates.filter(t => t.name !== name);
+    localStorage.setItem("emailTemplates", JSON.stringify(templates));
+    updateTemplateList();
+  }
+}
+
+function updateTemplateList() {
+  const sel = document.getElementById("templateSelect");
+  sel.innerHTML = '<option value="">-- Select Template --</option>';
+  for (const t of templates) {
+    const opt = document.createElement("option");
+    opt.value = t.name;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  }
+}
 
 window.onload = () => {
-  // Restore theme from localStorage
+  updateTemplateList();
   const theme = localStorage.getItem("theme");
   if (theme) {
     document.documentElement.setAttribute("data-bs-theme", theme);
     const logo = document.getElementById("logo-img");
     if (logo) {
-      logo.src = (theme === "dark") ?
-        "{{ url_for('static', filename='logo-dark.png') }}" :
-        "{{ url_for('static', filename='logo-light.png') }}";
+      logo.src = theme === "dark"
+        ? "{{ url_for('static', filename='logo-dark.png') }}"
+        : "{{ url_for('static', filename='logo-light.png') }}";
     }
   }
 };
@@ -235,11 +294,13 @@ function pollLogs() {
     .then(res => res.json())
     .then(data => {
       const logs = data.logs || [];
-      const success = +data.success || 0;
+      const success = +data.success || 0;  // Convert to numbers
       const failed = +data.failed || 0;
       const total = +data.total || {{ total }};
       const sentCnt = success + failed;
       const percent = total ? Math.round((sentCnt / total) * 100) : 0;
+
+      console.log("[pollLogs]", { total, success, failed, sentCnt });
 
       let html = `
         <hr class="my-4" />
@@ -273,20 +334,23 @@ function pollLogs() {
       if (total === 0 || sentCnt >= total) {
         html += `<div class="alert alert-success mt-3">✅ All emails processed.</div>`;
         document.getElementById("log-output").innerHTML = html;
-        return;
+        console.log("[pollLogs] All emails processed. Stopping polling.");
+        return; // Stop polling
       }
 
       document.getElementById("log-output").innerHTML = html;
       setTimeout(pollLogs, 2000);
     })
     .catch(err => {
+      console.error("Error fetching logs:", err);
       setTimeout(pollLogs, 5000);
     });
 }
 
+// Start polling shortly after page load (increased delay for backend prep)
 setTimeout(pollLogs, 5000);
 {% endif %}
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
