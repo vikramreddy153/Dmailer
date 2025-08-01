@@ -24,8 +24,8 @@ ALLOWED_EXTENSIONS = {"pdf", "doc", "docx"}
 LAST_PROGRESS = {"total": 0}
 
 # Use environment variables for Gmail credentials
-GMAIL_USER = os.environ.get("GMAIL_USER", "your_email@gmail.com")
-APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "your_app_password")
+GMAIL_USER = os.environ.get("GMAIL_USER")
+APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -255,3 +255,4 @@ def index():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))  # Use Render or hosting platform port
     app.run(host='0.0.0.0', port=port)
+
