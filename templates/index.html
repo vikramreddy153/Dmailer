@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dmailer</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Title Logo.png') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <style>
+    textarea {
+      white-space: pre-wrap;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+    }
+    .sticky-top {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body class="main-bg">
+<div class="container py-4">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex align-items-center gap-3">
+    <img id="logo-img" src="{{ url_for('static', filename='logo-dark.png') }}" alt="Dmailer Logo" style="height:80px;"/>
+  </div>
+  <div>
+    <a class="btn btn-secondary btn-sm me-2" href="{{ url_for('home') }}">🏠 Home</a>
+    <button class="btn btn-outline-light btn-sm" onclick="toggleTheme()">🌓 Light/Dark</button>
+  </div>
+</div>
+
+
+  <!-- HOW TO USE & Sample CSV -->
+  <div class="alert alert-info">
+    <b>How to use:</b>
+    <ul class="mb-1">
+      <li><b>Resume:</b> Upload a single PDF, DOC, or DOCX file. Will be sent to every contact.</li>
+      <li><b>Contacts CSV:</b> Must include columns: <code>name</code>, <code>email</code>, <code>company</code> (case-insensitive).</li>
+    </ul>
+    <a href="{{ url_for('static', filename='sample.csv') }}" class="btn btn-warning btn-sm mb-2">⬇️ Download Sample CSV</a>
+    <b>Example:</b>
+    <pre class="border rounded p-2 bg-light text-dark mb-0">name,email,company
+Alice Johnson,alice@example.com,Google
+Bob Smith,bob@example.com,Microsoft
+Charlie Doe,charlie@example.com,Amazon</pre>
+  </div>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data" class="form-box p-4 rounded shadow">
+
+    <!-- Section 1: Your Info -->
+    <h5 class="mb-3"><b>1. Your Information</b></h5>
+    <div class="row mb-3">
+      <div class="col"><input name="your_name" class="form-control" placeholder="Your Full Name" required/></div>
+      <div class="col"><input name="your_email" class="form-control" placeholder="Your Gmail" required/></div>
+    </div>
+    <div class="row mb-3">
+      <div class="col"><input name="your_mobile" class="form-control" placeholder="Mobile Number" required/></div>
+      <div class="col"><input name="your_linkedin" class="form-control" placeholder="LinkedIn URL" required/></div>
+      <div class="col"><input name="your_github" class="form-control" placeholder="GitHub URL" required/></div>
+    </div>
+
+    <!-- App password with show/hide -->
+    <div class="input-group mb-2">
+      <input type="password" name="app_password" id="appPass" class="form-control" placeholder="Gmail App Password" required>
+      <span class="input-group-text" onclick="toggleAppPass()" style="cursor:pointer;" title="Show/Hide Password">👁️</span>
+    </div>
+    <!-- PDF guide link below App Password -->
+    <div class="mb-4">
+      <small>
+        Need help creating a Gmail App Password?
+        <a href="{{ url_for('static', filename='gmail_app_password_guide.pdf') }}" target="_blank" class="link-info">
+          Click here to open the guide PDF 📄
+        </a>
+      </small>
+    </div>
+
+    <!-- Section 2: Uploads -->
+    <h5 class="mb-3"><b>2. Upload Files</b></h5>
+    <div class="mb-2">
+      <label>Contacts CSV</label>
+      <input type="file" name="csv_file" accept=".csv" class="form-control" required/>
+    </div>
+    <div class="mb-4">
+      <label>Resume (PDF/DOC/DOCX)</label>
+      <input type="file" name="resume" accept=".pdf,.doc,.docx" class="form-control" required/>
+    </div>
+
+    {% if uploaded_resume %}
+      <h6>📄 Resume Preview:</h6>
+      <iframe src="{{ url_for('uploaded_file', filename=uploaded_resume) }}" width="100%" height="300" class="mb-3 border"></iframe>
+    {% endif %}
+
+    <!-- Section 3: Content -->
+
+    <h5 class="mb-3"><b>3. Email Content</b></h5>
+    <div class="mb-3">
+      <h6><b>📑 Saved Templates</b></h6>
+      <div class="d-flex gap-2 mb-2">
+        <select id="templateSelect" class="form-select w-50" onchange="loadTemplate()">
+          <option value="">-- Select Template --</option>
+        </select>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="saveTemplate()">💾 Save</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="deleteTemplate()">🗑️ Delete</button>
+      </div>
+    </div>
+
+       <!-- Placeholder explanation note below email body -->
+    <div class="alert alert-secondary">
+      <b>Note:</b> Use these placeholders in Subject and Body to personalize your emails:<br>
+      <ul>
+        <li><code>{name}</code> - Recipient's full name</li>
+        <li><code>{email}</code> - Recipient's email address</li>
+        <li><code>{company}</code> - Recipient's company name</li>
+        <li><code>{your_name}</code> - Your name</li>
+        <li><code>{your_email}</code> - Your email address</li>
+        <li><code>{your_mobile}</code> - Your mobile number</li>
+        <li><code>{your_linkedin}</code> - Your LinkedIn URL</li>
+        <li><code>{your_github}</code> - Your GitHub URL</li>
+      </ul>
+    </div>
+
+    <label>Subject Line:</label>
+    <input name="subject_template" class="form-control mb-3" value="Referral Request for Internship at {company}" required/>
+
+    <label>Email Body (Plain Text with Placeholders):</label>
+    <textarea name="email_template" class="form-control mb-4" rows="10" required>Dear {name},
+
+I hope this message finds you well. I am reaching out to express my keen interest in exploring internship opportunities at {company} and was wondering if you might be open to referring me.
+
+I am a motivated and enthusiastic candidate with a background in Computer Science and a strong interest in contributing to innovative teams such as yours.
+
+If you feel comfortable, I would sincerely appreciate your support in referring me or guiding me through the application process at {company}. Please let me know if you'd like any further details or documents.
+
+Thank you very much for considering my request.
+
+Best regards,
+{your_name}
+Email: {your_email}
+Mobile: {your_mobile}
+LinkedIn: {your_linkedin}
+GitHub: {your_github}
+    </textarea>
+
+
+
+    <!-- Section 4: Send Settings -->
+    <h5 class="mb-3"><b>4. Sending Options</b></h5>
+    <div class="row mb-3">
+      <div class="col">
+        <label>Delay (seconds between emails)</label>
+        <input name="delay" type="number" class="form-control" value="3" min="1"/>
+      </div>
+      <div class="col">
+        <label>Schedule Send (optional)</label>
+        <input type="datetime-local" name="send_time" class="form-control"/>
+      </div>
+    </div>
+
+    <!-- Preview and Send buttons -->
+    <div class="mb-3 d-flex gap-2">
+      <button class="btn btn-primary w-100" id="sendBtn">🚀 Send Emails</button>
+      <button type="submit" formtarget="_blank" formaction="{{ url_for('preview') }}" formmethod="post" class="btn btn-outline-secondary">
+        👁️ Preview Email
+      </button>
+    </div>
+  </form>
+
+  <!-- Live logs & Results -->
+  <div id="log-output"></div>
+</div>
+<!-- Footer -->
+
+<footer class="mt-5 py-3 border-top text-center text-muted small">
+  <div class="container">
+    <p class="mb-1">© {{ current_year }} Dmailer. All rights reserved.</p>
+    <p class="mb-0">
+      Contact me: 
+      <a href="mailto:mandavikramreddy@gmail.com" class="link-info">mandavikramreddy@gmail.com</a> |
+      <a href="https://www.linkedin.com/in/vikramreddy153/" target="_blank" class="link-info">LinkedIn</a> |
+      <a href="https://github.com/vikramreddy153" target="_blank" class="link-info">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+
+
+<!-- Scripts -->
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const theme = html.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+  html.setAttribute("data-bs-theme", theme);
+  localStorage.setItem("theme", theme);
+
+  // Swap logo depending on theme:
+  const logo = document.getElementById("logo-img");
+  if (logo) {
+    if (theme === "dark") {
+      logo.src = "{{ url_for('static', filename='logo-dark.png') }}";  // white version
+    } else {
+      logo.src = "{{ url_for('static', filename='logo-light.png') }}";  // black version
+    }
+  }
+}
+
+function toggleAppPass() {
+  const input = document.getElementById('appPass');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// Prevent double submit
+document.querySelector('form').onsubmit = function() {
+  document.getElementById('sendBtn').disabled = true;
+};
+
+// Email template local management using localStorage
+let templates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
+
+function saveTemplate() {
+  const name = prompt("Save template as:");
+  if (!name) return;
+  const subj = document.querySelector('input[name="subject_template"]').value;
+  const body = document.querySelector('textarea[name="email_template"]').value;
+  templates = templates.filter(t => t.name !== name);
+  templates.push({ name, subj, body });
+  localStorage.setItem("emailTemplates", JSON.stringify(templates));
+  updateTemplateList();
+  alert("Template saved.");
+}
+
+function loadTemplate() {
+  const name = document.getElementById("templateSelect").value;
+  const found = templates.find(t => t.name === name);
+  if (found) {
+    document.querySelector('input[name="subject_template"]').value = found.subj;
+    document.querySelector('textarea[name="email_template"]').value = found.body;
+  }
+}
+
+function deleteTemplate() {
+  const name = document.getElementById("templateSelect").value;
+  if (!name) {
+    alert("Select a template to delete.");
+    return;
+  }
+  if (confirm(`Delete template "${name}"?`)) {
+    templates = templates.filter(t => t.name !== name);
+    localStorage.setItem("emailTemplates", JSON.stringify(templates));
+    updateTemplateList();
+  }
+}
+
+function updateTemplateList() {
+  const sel = document.getElementById("templateSelect");
+  sel.innerHTML = '<option value="">-- Select Template --</option>';
+  for (const t of templates) {
+    const opt = document.createElement("option");
+    opt.value = t.name;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  }
+}
+
+window.onload = () => {
+  updateTemplateList();
+  const theme = localStorage.getItem("theme");
+  if (theme) {
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    const logo = document.getElementById("logo-img");
+    if (logo) {
+      logo.src = theme === "dark"
+        ? "{{ url_for('static', filename='logo-dark.png') }}"
+        : "{{ url_for('static', filename='logo-light.png') }}";
+    }
+  }
+};
+
+{% if sent %}
+function pollLogs() {
+  fetch("/get_logs")
+    .then(res => res.json())
+    .then(data => {
+      const logs = data.logs || [];
+      const success = +data.success || 0;  // Convert to numbers
+      const failed = +data.failed || 0;
+      const total = +data.total || {{ total }};
+      const sentCnt = success + failed;
+      const percent = total ? Math.round((sentCnt / total) * 100) : 0;
+
+      console.log("[pollLogs]", { total, success, failed, sentCnt });
+
+      let html = `
+        <hr class="my-4" />
+        <h4>📊 Sending Progress</h4>
+        <div class="progress mb-2" style="height:24px;">
+          <div class="progress-bar" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"
+               style="width:${percent}%">${percent}%</div>
+        </div>
+        <ul class="list-group mb-4">
+          <li class="list-group-item text-success">✅ Sent: <b>${success}</b> / ${total}</li>
+          <li class="list-group-item text-danger">❌ Failed: <b>${failed}</b></li>
+        </ul>`;
+
+      if (logs.length > 0) {
+        html += `
+          <h5>📋 Send Log</h5>
+          <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+            <table class="table table-bordered table-sm small">
+              <thead><tr>${Object.keys(logs[0]).map(k => `<th>${k}</th>`).join('')}</tr></thead>
+              <tbody>
+                ${logs.map(row =>
+                  `<tr>${Object.values(row).map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}
+              </tbody>
+            </table>
+            <a href="{{ url_for('download_log') }}" class="btn btn-success mt-2">⬇️ Download Log CSV</a>
+          </div>`;
+      } else {
+        html += `<p class="text-warning">Processing&hellip;</p>`;
+      }
+
+      if (total === 0 || sentCnt >= total) {
+        html += `<div class="alert alert-success mt-3">✅ All emails processed.</div>`;
+        document.getElementById("log-output").innerHTML = html;
+        console.log("[pollLogs] All emails processed. Stopping polling.");
+        return; // Stop polling
+      }
+
+      document.getElementById("log-output").innerHTML = html;
+      setTimeout(pollLogs, 2000);
+    })
+    .catch(err => {
+      console.error("Error fetching logs:", err);
+      setTimeout(pollLogs, 5000);
+    });
+}
+
+// Start polling shortly after page load (increased delay for backend prep)
+setTimeout(pollLogs, 5000);
+{% endif %}
+</script>
+
+</body>
+</html>

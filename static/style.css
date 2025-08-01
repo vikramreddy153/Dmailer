@@ -1,0 +1,492 @@
+/* Reset and box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Full viewport gradient background */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal overflow */
+  background: linear-gradient(110deg, #0b1c2c 60%, #2c4772 100%);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed; /* fixed to viewport */
+  scroll-behavior: smooth;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* Main body background transparency for dark mode on body */
+body.main-bg {
+  min-height: 100vh;
+  background: transparent;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Main container */
+.container-lg {
+  flex: 1 0 auto;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  background: transparent !important;
+}
+
+
+/* Hide side decorations on small screens */
+@media (max-width: 768px) {
+  .bg-deco-left, .bg-deco-right {
+    display: none;
+  }
+}
+
+/* Section cards styling (dark mode default) */
+.section-card {
+  background: rgba(20, 25, 40, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(13, 15, 26, 0.26);
+  padding: 2rem 2rem;
+  margin-bottom: 2.5rem;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Section titles */
+h3.section-title {
+  color: #0d6efd;
+  font-weight: 600;
+  margin-bottom: 1.7rem;
+  text-align: center;
+}
+
+/* Feature list */
+.feature-list {
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.feature-list li {
+  text-align: left;
+  font-size: 1.1rem;
+  margin-bottom: 14px;
+  list-style: none;
+  padding-left: 30px;
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+}
+.feature-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #0d6efd;
+  font-weight: bold;
+  font-size: 1.16em;
+}
+
+/* Start Mailing button */
+.start-btn {
+  margin: 2.5rem auto 0 auto;
+  display: block;
+  min-width: 200px;
+  font-size: 1.12rem;
+  font-weight: 500;
+  transition: background 0.18s, box-shadow 0.26s;
+  box-shadow: 0 4px 18px #0d6efd3a;
+  align-self: center;
+}
+.start-btn:hover {
+  background: #0046d5;
+  box-shadow: 0 2px 24px #003aad80;
+}
+
+/* Creator image */
+.creator-img {
+  width: 136px;
+  height: 136px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #0d6efd70;
+  border: 3px solid #0d6efd;
+  margin-bottom: 1.2rem;
+  align-self: center;
+}
+
+/* Creator name */
+.creator-name {
+  font-size: 1.23rem;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  color: #ededed;
+  text-align: center;
+}
+
+/* Creator links */
+.creator-links {
+  display: flex;
+  gap: 1.08rem;
+  justify-content: center;
+  margin-top: 1.08rem;
+  flex-wrap: wrap;
+}
+.creator-links a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  color: #0d6efd;
+  background: #fff2;
+  border-radius: 40px;
+  padding: 8px 17px;
+  transition: background 0.18s, color 0.18s;
+  font-size: 1rem;
+}
+.creator-links a:hover, .creator-links a:focus {
+  background: #0d6efd;
+  color: #fff;
+  text-decoration: none;
+}
+.creator-links svg {
+  margin-right: 7px;
+  opacity: 0.9;
+  margin-bottom: 1.5px;
+}
+
+/* Contact form enhancements */
+.enhanced-contact-form {
+  max-width: 600px;
+  padding: 2rem 2.5rem;
+  background: rgba(30, 38, 60, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+  margin: 0 auto;
+}
+.enhanced-contact-form:hover,
+.enhanced-contact-form:focus-within {
+  box-shadow: 0 12px 30px rgba(13, 110, 253, 0.5);
+}
+.enhanced-contact-form .form-control-lg {
+  font-size: 1.15rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+}
+.enhanced-contact-form .form-floating > label {
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+.enhanced-contact-form button.btn-lg {
+  min-width: 180px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Contact form floating labels */
+.contact-form .form-floating > label {
+  color: #adb5bd;
+}
+.contact-form .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px #0d6efd99;
+}
+
+/* Why list */
+.why-list {
+  padding-left: 1.8rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  list-style: disc;
+  max-width: 470px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* FAQ */
+.faq-item {
+  margin-bottom: 1.3rem;
+}
+.faq-item strong {
+  color: #0d6efd;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.faq-answer {
+  color: #bbb;
+  padding-left: 1rem;
+}
+
+/* Testimonials */
+.testimonial-item {
+  background: rgba(13, 110, 253, 0.15);
+  border-radius: 10px;
+  padding: 1.1rem 1.5rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #d9e4ff;
+  max-width: 100%;
+}
+.testimonial-author {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #a3c8ff;
+  text-align: right;
+}
+
+/* Responsive stack for medium and smaller screens */
+@media (max-width: 991.98px) {
+  .section-card {
+    margin-bottom: 2.5rem !important;
+  }
+  .row-cols-md-2 > * {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* Mobile enhancements */
+@media (max-width: 767.98px) {
+  .container-lg {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 100% !important;
+  }
+  .feature-list li,
+  .why-list li {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+    padding-left: 25px !important;
+    margin-bottom: 12px !important;
+  }
+  h1.display-4 {
+    font-size: 2rem !important;
+    line-height: 1.15 !important;
+  }
+  h3.section-title {
+    font-size: 1.3rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .testimonial-item {
+    font-size: 0.9rem !important;
+    padding: 1rem 1.2rem !important;
+  }
+  .creator-img {
+    width: 110px !important;
+    height: 110px !important;
+  }
+  .btn-primary.start-btn {
+    min-width: 140px !important;
+    font-size: 1rem !important;
+    padding: 0.5rem 1.2rem !important;
+  }
+  .btn-success {
+    font-size: 1.1rem !important;
+    padding: 0.5rem 1.5rem !important;
+  }
+  .contact-form .form-floating > label {
+    font-size: 0.90rem;
+  }
+  .contact-form .form-control {
+    font-size: 0.95rem;
+  }
+}
+
+/* Smaller phones */
+@media (max-width: 400px) {
+  h1.display-4 {
+    font-size: 1.6rem !important;
+  }
+  h3.section-title {
+    font-size: 1.1rem !important;
+  }
+  .feature-list li,
+  .why-list li {
+    font-size: 0.9rem !important;
+  }
+  .testimonial-item {
+    font-size: 0.85rem !important;
+  }
+  .creator-img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .btn-primary.start-btn {
+    min-width: 120px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Full width inputs and textarea on small devices */
+@media (max-width: 576px) {
+  .contact-form .form-control,
+  .contact-form textarea {
+    font-size: 1rem;
+  }
+  .contact-form.mx-auto {
+    max-width: 100% !important;
+    padding: 0 0.5rem;
+  }
+}
+
+/* Smaller logo on mobile */
+@media (max-width: 576px) {
+  img#logo-img {
+    height: 60px !important;
+  }
+}
+
+/* -------- Light mode overrides -------- */
+
+[data-bs-theme="light"] body.main-bg {
+  background: #f2f8fe;
+  color: #000;
+}
+
+[data-bs-theme="light"] .section-card {
+  background: #ffffff;
+  color: #222222;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+[data-bs-theme="light"] h1,
+[data-bs-theme="light"] h2,
+[data-bs-theme="light"] h3,
+[data-bs-theme="light"] h4,
+[data-bs-theme="light"] h5,
+[data-bs-theme="light"] h6 {
+  color: #000000;
+}
+
+[data-bs-theme="light"] .creator-links a {
+  background: #e0e0e0;
+  color: #222222;
+}
+
+[data-bs-theme="light"] .creator-links a:hover,
+[data-bs-theme="light"] .creator-links a:focus {
+  background: #0d6efd;
+  color: #fff;
+}
+
+[data-bs-theme="light"] .enhanced-contact-form {
+  background: #f6f9fc;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  color: #222;
+}
+
+[data-bs-theme="light"] .feature-list li,
+[data-bs-theme="light"] .why-list li,
+[data-bs-theme="light"] .faq-answer,
+[data-bs-theme="light"] .testimonial-item {
+  color: #222;
+  background: #f0f4f8;
+}
+
+[data-bs-theme="light"] .testimonial-item {
+  background: #eaf1fb;
+}
+
+[data-bs-theme="light"] .faq-item strong {
+  color: #0b5ed7;
+}
+
+[data-bs-theme="light"] .text-muted {
+  color: #6c757d;
+}
+
+[data-bs-theme="light"] footer {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+/* Light mode: change button text color */
+[data-bs-theme="light"] .btn-toggle-theme,
+[data-bs-theme="light"] .btn-outline-light {
+  color: #111 !important;
+  border-color: #888 !important;
+  background-color: #fff !important;
+}
+
+[data-bs-theme="light"] .btn-outline-light:hover,
+[data-bs-theme="light"] .btn-toggle-theme:hover {
+  color: #fff !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+#dm-loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: linear-gradient(110deg, #0b1c2c 60%, #2c4772 100%);
+  z-index: 3000;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  transition: opacity 0.4s;
+}
+
+#dm-loader .logo-container {
+  margin-bottom: 2rem;
+  animation: pulseLogo 1.5s infinite linear alternate;
+}
+.loader-logo {
+  width: 84px; height: 84px;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px #0d6efd55;
+  background: #fff;
+  padding: 8px;
+  object-fit: contain;
+}
+
+@keyframes pulseLogo {
+  0% { transform: scale(1);}
+  100% { transform: scale(1.07);}
+}
+
+/* Wave loader animation */
+.wave {
+  display: flex; gap: 0.45rem; align-items: end;
+}
+.wave span {
+  display: block;
+  width: 14px;
+  height: 32px;
+  background: #0d6efd;
+  border-radius: 8px;
+  animation: waveAnim 1.2s infinite;
+}
+.wave span:nth-child(2) { animation-delay: 0.2s; }
+.wave span:nth-child(3) { animation-delay: 0.4s; }
+.wave span:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes waveAnim {
+  0%,100% { transform: scaleY(1);}
+  50% { transform: scaleY(1.8);}
+}
+
+/* Fade out */
+#dm-loader.hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+

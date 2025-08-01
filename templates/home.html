@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dmailer - Home</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Title Logo.png') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    body.main-bg {
+      min-height: 100vh;
+      background: linear-gradient(110deg, #0b1c2c 60%, #2c4772 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Section card style */
+    .section-card {
+      background: rgba(20, 25, 40, 0.97);
+      border-radius: 16px;
+      box-shadow: 0 6px 24px #0d0f1a42;
+      padding: 2rem 2rem;
+      margin-bottom: 2.5rem;
+      color: #ccc;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+    h3.section-title {
+      color: #0d6efd;
+      font-weight: 600;
+      margin-bottom: 1.7rem;
+      text-align: center;
+    }
+
+    .feature-list {
+      padding-left: 0;
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .feature-list li {
+      text-align: left;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      list-style: none;
+      padding-left: 30px;
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+    }
+    .feature-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #0d6efd;
+      font-weight: bold;
+      font-size: 1.16em;
+    }
+    .start-btn {
+      margin: 2.5rem auto 0 auto;
+      display: block;
+      min-width: 200px;
+      font-size: 1.12rem;
+      font-weight: 500;
+      transition: background 0.18s, box-shadow 0.26s;
+      box-shadow: 0 4px 18px #0d6efd3a;
+      align-self: center;
+    }
+    .start-btn:hover {
+      background: #0046d5;
+      box-shadow: 0 2px 24px #003aad80;
+    }
+    .creator-img {
+      width: 136px; height: 136px; object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #0d6efd70;
+      border: 3px solid #0d6efd;
+      margin-bottom: 1.2rem;
+      align-self: center;
+    }
+    .creator-name {
+      font-size: 1.23rem; font-weight: 600; margin-bottom: 0.7rem; color: #ededed;
+      text-align: center;
+    }
+    .creator-links {
+      display: flex; gap: 1.08rem; justify-content: center; margin-top: 1.08rem; flex-wrap: wrap;
+    }
+    .creator-links a {
+      display: inline-flex; align-items: center;
+      text-decoration: none; font-weight: 500; color: #0d6efd;
+      background: #fff2;
+      border-radius: 40px; padding: 8px 17px;
+      transition: background .18s, color .18s;
+      font-size: 1rem;
+    }
+    .creator-links a:hover, .creator-links a:focus {
+      background: #0d6efd; color: #fff; text-decoration: none;
+    }
+    .creator-links svg {
+      margin-right: 7px; opacity: .9; margin-bottom: 1.5px;
+    }
+    .contact-form .form-floating > label { color: #adb5bd; }
+    .contact-form .form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 6px #0d6efd99;
+    }
+    /* Why list style */
+    .why-list {
+      padding-left: 1.8rem;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      list-style: disc;
+      max-width: 470px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    /* FAQ style */
+    .faq-item {
+      margin-bottom: 1.3rem;
+    }
+    .faq-item strong {
+      color: #0d6efd;
+      cursor: pointer;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .faq-answer {
+      color: #bbb;
+      padding-left: 1rem;
+    }
+    /* Testimonials */
+    .testimonial-item {
+      background: rgba(13, 110, 253, 0.15);
+      border-radius: 10px;
+      padding: 1.1rem 1.5rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+      color: #d9e4ff;
+      max-width: 100%;
+    }
+    .testimonial-author {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      color: #a3c8ff;
+      text-align: right;
+    }
+
+    @media (max-width: 991.98px) {
+      /* Stack all rows vertically on medium/smaller screens */
+      .section-card {
+        margin-bottom: 2.5rem !important;
+      }
+      .row-cols-md-2 > * {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="main-bg">
+  <div id="dm-loader">
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='logo-light.png') }}" alt="Dmailer Logo" class="loader-logo" />
+    </div>
+    <div class="wave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="container-lg py-5">
+    <div class="text-center mb-5">
+      <img src="{{ url_for('static', filename='logo-dark.png') }}" alt="Dmailer Logo" style="height: 90px;" class="mb-3" />
+      <h1 class="display-4 fw-bold">Welcome to <span class="text-primary">Dmailer</span></h1>
+      <p class="lead mt-3 text-muted">Supercharge your referral and internship outreach with personalized bulk emails!</p>
+    </div>
+
+    <!-- Row 1: Key Features | Why Dmailer -->
+    <div class="row g-4 mb-4 row-cols-md-2">
+      <div class="col">
+        <section class="section-card h-100 d-flex flex-column">
+          <h3 class="section-title">✨ Key Features</h3>
+          <ul class="feature-list">
+            <li>Send personalized emails in bulk using custom templates</li>
+            <li>Attach your resume (PDF, DOC, DOCX) to each email</li>
+            <li>Supports scheduling and delay settings between emails</li>
+            <li>Live progress log, download results as CSV</li>
+            <li>Theme switcher (dark/light)</li>
+            <li>Use placeholders for auto-filling (name, company, etc.)</li>
+          </ul>
+          <a href="{{ url_for('index') }}" class="btn btn-lg btn-primary start-btn mt-auto">
+            🚀 Start Mailing
+          </a>
+        </section>
+      </div>
+
+      <div class="col">
+        <section class="section-card h-100">
+          <h3 class="section-title">Why Dmailer?</h3>
+          <ul class="why-list">
+            <li>Save countless hours manually sending referral requests.</li>
+            <li>Personalize each email with placeholders for maximum impact.</li>
+            <li>Schedule your campaign to hit inboxes at the optimal time.</li>
+            <li>Monitor your progress with live logs and error reports.</li>
+            <li>Download detailed CSV logs for performance tracking.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- Row 2: FAQ | Testimonials -->
+    <div class="row g-4 mb-4 row-cols-md-2">
+      <div class="col">
+        <section class="section-card h-100">
+          <h3 class="section-title">Frequently Asked Questions</h3>
+          <div class="faq-item">
+            <strong>Can I schedule emails to send later?</strong>
+            <p class="faq-answer">Yes, Dmailer allows you to schedule your emails to be sent at a later date and time.</p>
+          </div>
+          <div class="faq-item">
+            <strong>What file formats are accepted for the resume attachment?</strong>
+            <p class="faq-answer">You can upload PDFs, DOC, or DOCX files as your resume to attach with emails.</p>
+          </div>
+          <div class="faq-item">
+            <strong>Is my Gmail password stored anywhere?</strong>
+            <p class="faq-answer">No, your Gmail app password is only used during the current session to send emails and is not stored.</p>
+          </div>
+          <div class="faq-item">
+            <strong>Can I preview the email before sending?</strong>
+            <p class="faq-answer">Absolutely! Use the 'Preview Email' option on the mailing page before scheduling bulk sending.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="col">
+        <section class="section-card h-100">
+          <h3 class="section-title">What Our Users Say</h3>
+          <div class="testimonial-item">
+            "Dmailer made my internship outreach effortless and professional. Highly recommended!"<br />
+            <span class="testimonial-author">- Alice J.</span>
+          </div>
+          <div class="testimonial-item">
+            "The scheduling and live feedback features are lifesavers. I landed interviews faster!"<br />
+            <span class="testimonial-author">- Bob S.</span>
+          </div>
+          <div class="testimonial-item">
+            "Easy to use, and it saved me hours every week while keeping every email personal." <br />
+            <span class="testimonial-author">- Charlie D.</span>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Row 3: About Creator and Contact stacked vertically -->
+    <div class="row g-4 mb-4">
+      <div class="col-12">
+        <section class="section-card h-100 d-flex flex-column align-items-center">
+          <h3 class="section-title">👨‍💻 About the Creator</h3>
+          <img src="{{ url_for('static', filename='creator.jpg') }}" alt="Creator Image" class="creator-img" />
+          <div class="creator-name">MANDA CHANIKYA SAI VIKRAM REDDY</div>
+          <div class="creator-links">
+            <a href="mailto:mandavikramreddy@gmail.com" title="Send Email">
+              <svg height="18" width="18" fill="currentColor" viewBox="0 0 24 24"><path d="M1.5,4.5h21c0.8,0,1.5,0.7,1.5,1.5v12c0,0.8-0.7,1.5-1.5,1.5h-21C0.7,19.5,0,18.8,0,18V6C0,5.2,0.7,4.5,1.5,4.5z M12,13.9 l9.8-6.4l-0.7-1.3l-9.1,5.9L2.9,6.2l-0.7,1.3L12,13.9z"/></svg>
+              Email
+            </a>
+            <a target="_blank" href="https://www.linkedin.com/in/vikramreddy153/" title="LinkedIn profile" rel="noopener noreferrer">
+              <svg height="18" width="18" fill="currentColor" viewBox="0 0 24 24"><path d="M21 21h-4V14.8c0-1.48-.03-3.39-2.08-3.39-2.09 0-2.41 1.63-2.41 3.31V21H9V9h3v1.64h.04c.42-.78 1.44-1.6 2.97-1.6 3.18 0 3.77 2.09 3.77 4.82V21zM5.34 7.5A1.75 1.75 0 1 1 5.3 4a1.75 1.75 0 0 1 .04 3.5zm2.33 13.5H3V9h4.67v12z"/></svg>
+              LinkedIn
+            </a>
+            <a target="_blank" href="https://github.com/vikramreddy153" title="GitHub profile" rel="noopener noreferrer">
+              <svg height="18" width="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2C6.477,2,2,6.479,2,12c0,4.418,2.868,8.167,6.839,9.489c0.5,0.092,0.682-0.217,0.682-0.482 c0-0.237-0.009-0.866-0.013-1.699c-2.782,0.604-3.369-1.342-3.369-1.342c-0.454-1.155-1.109-1.463-1.109-1.463 c-0.908-0.62,0.069-0.608,0.069-0.608c1.004,0.071,1.532,1.031,1.532,1.031c0.892,1.527,2.341,1.087,2.91,0.832 c0.091-0.647,0.35-1.087,0.636-1.338c-2.22-0.252-4.555-1.111-4.555-4.945c0-1.092,0.39-1.983,1.029-2.682 C7.172,9.025,6.87,8.143,7.342,6.823c0,0,0.84-0.269,2.75,1.025C11.064,7.632,11.532,7.548,12,7.546 c0.468,0.002,0.936,0.086,1.375,0.252c1.91-1.294,2.75-1.025,2.75-1.025c0.473,1.32,0.171,2.202,0.084,2.435 c0.64,0.699,1.029,1.59,1.029,2.682c0,3.842-2.338,4.69-4.566,4.938c0.359,0.307,0.679,0.915,0.679,1.846 c0,1.333-0.012,2.409-0.012,2.738c0,0.268,0.18,0.578,0.688,0.48C19.135,20.163,22,16.418,22,12C22,6.479,17.523,2,12,2z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12">
+        <section class="section-card h-100">
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <form method="POST" action="{{ url_for('contact') }}" class="contact-form mx-auto enhanced-contact-form">
+            <h3 class="section-title text-center">📬 Contact the Creator</h3>
+            <div class="form-floating mb-4">
+              <input name="name" type="text" class="form-control form-control-lg" id="floatingName" placeholder="Your Name" required />
+              <label for="floatingName">Your Name</label>
+            </div>
+            <div class="form-floating mb-4">
+              <input name="email" type="email" class="form-control form-control-lg" id="floatingEmail" placeholder="Your Email" required />
+              <label for="floatingEmail">Your Email</label>
+            </div>
+            <div class="form-floating mb-4">
+              <textarea name="message" class="form-control form-control-lg" placeholder="Your message" id="floatingMessage" style="height: 160px" required></textarea>
+              <label for="floatingMessage">Your Message</label>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success btn-lg shadow-sm px-5">
+                ✉️ Send Message
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-muted small">
+    <div class="container-lg">
+      <p class="mb-1">© {{ current_year }} Dmailer. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+window.addEventListener('load', function() {
+  const loader = document.getElementById('dm-loader');
+  if (loader) {
+    loader.classList.add('hide');
+    setTimeout(() => loader.style.display = 'none', 600);
+  }
+});
+</script>
+</body>
+</html>
