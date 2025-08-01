@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 import csv
 
 app = Flask(__name__)
-app.secret_key = "super-secret"  # Change this for production!
+app.secret_key = os.environ.get('SECRET_KEY', 'super-secret')  # Use env var in production!
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -22,6 +22,10 @@ LOG_FILE = os.path.join(UPLOAD_FOLDER, "sent_log.csv")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {"pdf", "doc", "docx"}
 LAST_PROGRESS = {"total": 0}
+
+# Use environment variables for Gmail credentials
+GMAIL_USER = os.environ.get("GMAIL_USER", "your_email@gmail.com")
+APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "your_app_password")
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -98,7 +102,7 @@ def send_bulk_emails(data, subject_template, html_template, resume_path, user_in
             if wait_time > 0:
                 print(f"⏳ Waiting {wait_time:.1f}s before starting email sending...")
                 time.sleep(wait_time)
-            yag = yagmail.SMTP(user_info["your_email"], user_info["app_password"])
+            yag = yagmail.SMTP(user_info.get("your_email") or GMAIL_USER, user_info.get("app_password") or APP_PASSWORD)
         except Exception as e:
             print(f"❌ Gmail connection failed: {e}")
             with open(LOG_FILE, 'w', newline='', encoding='utf-8') as f:
@@ -140,6 +144,9 @@ def send_bulk_emails(data, subject_template, html_template, resume_path, user_in
 
         print("✅ All emails processed.")
 
+    # Run sending job in a background thread to not block request
+    threading.Thread(target=send_job, daemon=True).start()
+
 @app.route('/')
 def home_redirect():
     return redirect(url_for('home'))
@@ -154,9 +161,6 @@ def contact():
     name = request.form.get("name")
     email = request.form.get("email")
     message = request.form.get("message")
-
-    GMAIL_USER = "mandavikramreddy@gmail.com"           # Your Gmail address
-    APP_PASSWORD = "ofga oqtq gfpb cjmc"             # Gmail app password
 
     try:
         yag = yagmail.SMTP(GMAIL_USER, APP_PASSWORD)
@@ -248,9 +252,6 @@ def index():
 
     return render_template("index.html", sent=False, uploaded_resume=uploaded_resume, total=0, current_year=current_year)
 
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Render uses 10000 by default
+    port = int(os.environ.get("PORT", 10000))  # Use Render or hosting platform port
     app.run(host='0.0.0.0', port=port)
-
-
