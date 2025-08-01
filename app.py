@@ -144,7 +144,6 @@ def send_bulk_emails(data, subject_template, html_template, resume_path, user_in
 
         print("✅ All emails processed.")
 
-    # Run sending job in a background thread to not block request
     threading.Thread(target=send_job, daemon=True).start()
 
 @app.route('/')
@@ -164,16 +163,18 @@ def contact():
 
     try:
         yag = yagmail.SMTP(GMAIL_USER, APP_PASSWORD)
-        contents = [
-            f"Name: {name}",
-            f"Email: {email}",
-            f"Message:",
-            message
-        ]
+
+        # Combine all data into one formatted string
+        email_body = f"""Name: {name}
+Email: {email}
+
+Message:
+{message}
+"""
         yag.send(
             to=GMAIL_USER,
             subject=f"Dmailer Contact Form: Message from {name}",
-            contents=contents,
+            contents=email_body,
         )
         flash("✅ Your message was sent successfully! I'll get back to you soon.", "success")
     except Exception as e:
@@ -252,7 +253,7 @@ def index():
 
     return render_template("index.html", sent=False, uploaded_resume=uploaded_resume, total=0, current_year=current_year)
 
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))  # Use Render or hosting platform port
     app.run(host='0.0.0.0', port=port)
-
